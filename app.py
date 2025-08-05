@@ -3,10 +3,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-api_key = os.getenv("OPENAI_API_KEY")
-if api_key is None:
-    raise ValueError("OPENAI_API_KEY is not set in the environment.")
-os.environ["OPENAI_API_KEY"] = api_key
 
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
