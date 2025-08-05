@@ -1,16 +1,9 @@
-from dotenv import load_dotenv
-import os
-
-load_dotenv()  # .envファイルから環境変数を読み込む
-
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
-# OpenAIのAPIキーを取得
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    raise ValueError("OPENAI_API_KEY が .env に設定されていません。")
+# Streamlit SecretsからAPIキーを取得
+api_key = st.secrets["OPENAI_API_KEY"]
 
 # アプリの概要・操作説明
 st.markdown("""
