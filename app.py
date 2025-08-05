@@ -1,12 +1,16 @@
 from dotenv import load_dotenv
-
-load_dotenv()
-
 import os
+
+load_dotenv()  # .envファイルから環境変数を読み込む
 
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
+
+# OpenAIのAPIキーを取得
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY が .env に設定されていません。")
 
 # アプリの概要・操作説明
 st.markdown("""
@@ -20,20 +24,24 @@ st.markdown("""
 3. 選択した専門家が質問に回答します。
 """)
 
+# LLMからの回答を取得する関数
 def get_llm_response(user_input: str, expert_type: str) -> str:
     if expert_type.startswith("A"):
         system_prompt = "あなたは料理の領域の専門家です。ユーザーの質問には料理の専門家として答えてください。"
     else:
         system_prompt = "あなたはトレーニングの領域の専門家です。ユーザーの質問にはトレーニングの専門家として答えてください。"
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=api_key)
+    
     messages = [
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_input)
     ]
+    
     response = llm(messages)
     return response.content
 
-# Streamlitのタイトル
+# Streamlitタイトル
 st.title("LangChain LLM チャットデモ")
 
 # 専門家の種類を選択
